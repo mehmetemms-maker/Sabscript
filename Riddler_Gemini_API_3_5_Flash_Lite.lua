@@ -8779,7 +8779,7 @@ do
 		end
 		local prompt
 		if operation == "solve" then
-			prompt = "You solve Roblox Steal a Brainrot riddles. Use the live game data below as authoritative. Riddle: " .. tostring(args.riddle or "") .. "\nLive game data: " .. liveState .. "\nReturn only the final answer. If it is a redeemable code, return exactly OVERRIDE: followed by the code. Do not explain."
+			prompt = "You solve Roblox Steal a Brainrot riddles. Answer the exact riddle, not a repeated/default number. Do NOT answer 67 unless the riddle specifically supports 67. Use live game data only when relevant; do not copy unrelated names or numbers from it. Riddle: " .. tostring(args.riddle or "") .. "\nLive game data: " .. liveState .. "\nOUTPUT FORMAT IS REQUIRED: for a normal answer, return exactly ANSWER: followed by the short answer. For a redeemable code only, return exactly OVERRIDE: followed by the code. Never return a bare answer and never guess 67 as a fallback. Do not explain."
 		else
 			prompt = "Answer a Roblox Steal a Brainrot question using the provided context. Question: " .. tostring(args.riddle or "") .. "\nSearch query: " .. tostring(args.query or "") .. "\nIs this asking for a redeemable code: " .. tostring(args.isCode == true) .. "\nReturn only CODE: <code> if it is a code, otherwise ANSWER: <short answer>. Do not explain."
 		end
