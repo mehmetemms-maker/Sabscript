@@ -16,6 +16,7 @@
 local sliced85, sliced86, localPlayer, sliced87, net, sliced88, sliced89, sliced90, keyboardEnabled, flag18
 local slicedfn29, sliced91, tbl18, max, flag19, sliced92, flag20, autoRedeem, autoType, manual
 local flag21, thread, slicedn32, slicedn33, listenKey, g, str7, tbl19, sliced93, sliced94
+local submitWordCounts = {}
 local flag22, autoListen, sliced95, sliced96, slicedfn30, slicedfn31, slicedfn32, slicedfn33, slicedfn34, slicedfn35
 local slicedfn36, slicedfn37, slicedfn38, slicedfn39, slicedfn40, slicedfn41, tbl20, tbl21, gothamMedium, gothamBold
 local gothamBlack, slicedfn42, slicedfn43, slicedfn44, slicedfn45, slicedfn46, slicedfn47, slicedfn48, slicedfn49, ScreenGui
@@ -149,6 +150,7 @@ do  -- LEAKED BY SLICED | discord.gg/pubmethod
 									thread = nil  -- LEAKED BY SLICED | discord.gg/pubmethod
 									slicedn32 = 0
 									slicedn33 = 1
+									submitWordCounts = { [1] = _G.__RdmCfgBool("submitCount1", false), [2] = _G.__RdmCfgBool("submitCount2", false), [3] = _G.__RdmCfgBool("submitCount3", true), [4] = _G.__RdmCfgBool("submitCount4", true) }
 									listenKey = tbl18.listenKey
 									g = Enum.KeyCode.G
 									str7 = nil
@@ -1555,13 +1557,49 @@ do  -- LEAKED BY SLICED | discord.gg/pubmethod
 						slicedfn54(arg4)
 						return Frame7, slicedfn54
 					end
-					words = slicedfn53(11, "WORDS", { "1", "2", "3", "4" }, tostring(slicedn33), function(arg)
-						slicedn33 = tonumber(arg) or 1
-						tbl19 = {}  -- LEAKED BY SLICED | discord.gg/pubmethod
-						if flag20 and not manual then
-							slicedfn50(("listening... 0/%d"):format(slicedn33), "wait")
+					-- Multi-select Submit Word Count (1-4), defaulting to 3 and 4.
+					words = slicedfn42("Frame", {
+						Size = UDim2.new(1, 0, 0, 31),
+						BackgroundColor3 = tbl21.panel,
+						BorderSizePixel = 0,
+						LayoutOrder = 11,
+					}, Frame6)
+					slicedfn43(words, 8)
+					slicedfn44(words, tbl21.line, 1, 0.3)
+					local countTitle = slicedfn46("SUBMIT COUNT", 10, tbl21.sub, gothamBold, Enum.TextXAlignment.Left, words)
+					countTitle.Size = UDim2.new(0, 108, 1, 0)
+					countTitle.Position = UDim2.fromOffset(10, 0)
+					local countButtons = {}
+					local function refreshSubmitCounts()
+						local chosen = {}
+						for n = 1, 4 do
+							local button = countButtons[n]
+							local on = submitWordCounts[n] == true
+							button.BackgroundColor3 = on and tbl21.acc or tbl21.input
+							button.TextColor3 = on and Color3.fromRGB(255, 255, 255) or tbl21.sub
+							if on then table.insert(chosen, tostring(n)) end
 						end
-					end)
+						if #chosen == 0 then
+							slicedfn50("Submit count: none selected", "wait")
+						end
+					end
+					for n = 1, 4 do
+						local button = slicedfn42("TextButton", {
+							Size = UDim2.fromOffset(30, 23),
+							Position = UDim2.new(0, 120 + (n - 1) * 34, 0.5, -11.5),
+							BackgroundColor3 = tbl21.input,
+							Text = tostring(n), Font = gothamBold, TextSize = 11,
+							TextColor3 = tbl21.sub, AutoButtonColor = false, BorderSizePixel = 0,
+						}, words)
+						slicedfn43(button, 6)
+						countButtons[n] = button
+						button.MouseButton1Click:Connect(function()
+							submitWordCounts[n] = not submitWordCounts[n]
+							_G.__RdmCfgSet("submitCount" .. n, submitWordCounts[n])
+							refreshSubmitCounts()
+						end)
+					end
+					refreshSubmitCounts()
 					local Frame7 = slicedfn42("Frame", {
 						Size = UDim2.new(1, 0, 0, 31),
 						BackgroundColor3 = tbl21.panel,
@@ -3789,6 +3827,31 @@ do
 					sliced112 = sliced110
 				end
 				if flag20 then
+					-- In automatic mode, submit at every selected word count.
+					if not manual then
+						local maxSelected = 0
+						for n = 1, 4 do if submitWordCounts[n] then maxSelected = n end end
+						for _, token in ipairs(slicedfn36(sliced112)) do
+							tbl19[#tbl19 + 1] = token
+							local count = #tbl19
+							if submitWordCounts[count] then
+								local candidate = table.concat(tbl19)
+								if flag19 and flag21 then slicedfn56(candidate) end
+								slicedfn57(candidate)
+								slicedfn40(candidate)
+								slicedfn61(candidate)
+								if flag21 then slicedfn62(candidate) end
+							end
+							if maxSelected > 0 and count >= maxSelected then tbl19 = {} end
+						end
+						if #tbl19 > 0 then
+							slicedfn50(("listening... %d words - %s"):format(#tbl19, slicedfn58()), "wait")
+						elseif maxSelected == 0 then
+							slicedfn50("Select a Submit Word Count (1-4)", "wait")
+						end
+						slicedfn53(sliced110, sliced111)
+						return
+					end
 					for _, sliced113 in ipairs(slicedfn36(sliced112)) do
 						tbl19[#tbl19 + 1] = sliced113
 						if flag19 and flag21 then  -- LEAKED BY SLICED | discord.gg/pubmethod
