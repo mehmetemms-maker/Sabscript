@@ -1,0 +1,336 @@
+-- LEGENDRAY | Görsel Arayüz Şablonu
+-- Roblox Studio > StarterPlayer > StarterPlayerScripts içine LocalScript olarak ekleyin.
+-- Bu dosya yalnızca arayüz oluşturur. Oyun verilerine erişmez ve oyun mekaniklerini değiştirmez.
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local old = playerGui:FindFirstChild("LEGENDRAY_UI")
+if old then old:Destroy() end
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "LEGENDRAY_UI"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.Parent = playerGui
+
+local C = {
+    background = Color3.fromRGB(7, 10, 18),
+    panel = Color3.fromRGB(13, 18, 30),
+    panel2 = Color3.fromRGB(18, 25, 41),
+    line = Color3.fromRGB(35, 53, 78),
+    blue = Color3.fromRGB(0, 160, 255),
+    bright = Color3.fromRGB(48, 190, 255),
+    white = Color3.fromRGB(235, 243, 255),
+    muted = Color3.fromRGB(135, 153, 178),
+}
+
+local function corner(parent, radius)
+    local obj = Instance.new("UICorner")
+    obj.CornerRadius = UDim.new(0, radius or 8)
+    obj.Parent = parent
+    return obj
+end
+
+local function stroke(parent, color, thickness, transparency)
+    local obj = Instance.new("UIStroke")
+    obj.Color = color or C.line
+    obj.Thickness = thickness or 1
+    obj.Transparency = transparency or 0
+    obj.Parent = parent
+    return obj
+end
+
+local function label(parent, text, size, color, font)
+    local obj = Instance.new("TextLabel")
+    obj.BackgroundTransparency = 1
+    obj.Text = text
+    obj.TextColor3 = color or C.white
+    obj.TextSize = size or 14
+    obj.Font = font or Enum.Font.Gotham
+    obj.TextXAlignment = Enum.TextXAlignment.Left
+    obj.Parent = parent
+    return obj
+end
+
+local main = Instance.new("Frame")
+main.Name = "Main"
+main.Size = UDim2.fromOffset(690, 430)
+main.Position = UDim2.new(0.5, -345, 0.5, -215)
+main.BackgroundColor3 = C.background
+main.BorderSizePixel = 0
+main.Parent = gui
+corner(main, 14)
+stroke(main, C.line, 1.2)
+
+local scale = Instance.new("UIScale")
+scale.Scale = 1
+scale.Parent = main
+
+local top = Instance.new("Frame")
+top.Size = UDim2.new(1, 0, 0, 62)
+top.BackgroundColor3 = C.panel
+top.BorderSizePixel = 0
+top.Parent = main
+corner(top, 14)
+
+local topCover = Instance.new("Frame")
+topCover.Size = UDim2.new(1, 0, 0, 15)
+topCover.Position = UDim2.new(0, 0, 1, -15)
+topCover.BackgroundColor3 = C.panel
+topCover.BorderSizePixel = 0
+topCover.Parent = top
+
+local accent = Instance.new("Frame")
+accent.Size = UDim2.new(1, 0, 0, 2)
+accent.BackgroundColor3 = C.blue
+accent.BorderSizePixel = 0
+accent.Parent = top
+
+local title = label(top, "LEGENDRAY", 21, C.white, Enum.Font.GothamBold)
+title.Position = UDim2.fromOffset(22, 9)
+title.Size = UDim2.fromOffset(220, 25)
+
+local subtitle = label(top, "CONTROL CENTER  /  VISUAL UI", 9, C.muted, Enum.Font.GothamMedium)
+subtitle.Position = UDim2.fromOffset(23, 35)
+subtitle.Size = UDim2.fromOffset(260, 15)
+
+local status = label(top, "●  READY", 10, C.bright, Enum.Font.GothamBold)
+status.TextXAlignment = Enum.TextXAlignment.Right
+status.Position = UDim2.new(1, -112, 0, 22)
+status.Size = UDim2.fromOffset(88, 18)
+
+local close = Instance.new("TextButton")
+close.Size = UDim2.fromOffset(28, 28)
+close.Position = UDim2.new(1, -42, 0, 17)
+close.BackgroundColor3 = C.panel2
+close.Text = "×"
+close.TextColor3 = C.white
+close.TextSize = 20
+close.Font = Enum.Font.Gotham
+close.AutoButtonColor = false
+close.Parent = top
+corner(close, 7)
+
+local sidebar = Instance.new("Frame")
+sidebar.Position = UDim2.fromOffset(14, 76)
+sidebar.Size = UDim2.fromOffset(168, 340)
+sidebar.BackgroundColor3 = C.panel
+sidebar.BorderSizePixel = 0
+sidebar.Parent = main
+corner(sidebar, 10)
+stroke(sidebar, C.line, 1)
+
+local sideTitle = label(sidebar, "NAVIGATION", 9, C.muted, Enum.Font.GothamBold)
+sideTitle.Position = UDim2.fromOffset(15, 15)
+sideTitle.Size = UDim2.new(1, -25, 0, 18)
+
+local content = Instance.new("Frame")
+content.Position = UDim2.fromOffset(196, 76)
+content.Size = UDim2.new(1, -210, 1, -90)
+content.BackgroundColor3 = C.panel
+content.BorderSizePixel = 0
+content.Parent = main
+corner(content, 10)
+stroke(content, C.line, 1)
+
+local pageTitle = label(content, "Code Sniper", 19, C.white, Enum.Font.GothamBold)
+pageTitle.Position = UDim2.fromOffset(20, 18)
+pageTitle.Size = UDim2.new(1, -40, 0, 28)
+
+local pageDesc = label(content, "Select a section from the navigation menu.", 11, C.muted)
+pageDesc.Position = UDim2.fromOffset(21, 49)
+pageDesc.Size = UDim2.new(1, -42, 0, 20)
+
+local divider = Instance.new("Frame")
+divider.Position = UDim2.fromOffset(20, 82)
+divider.Size = UDim2.new(1, -40, 0, 1)
+divider.BackgroundColor3 = C.line
+divider.BorderSizePixel = 0
+divider.Parent = content
+
+local info = Instance.new("Frame")
+info.Position = UDim2.fromOffset(20, 103)
+info.Size = UDim2.new(1, -40, 0, 104)
+info.BackgroundColor3 = C.panel2
+info.BorderSizePixel = 0
+info.Parent = content
+corner(info, 8)
+stroke(info, C.line, 1)
+
+local infoHead = label(info, "WELCOME TO LEGENDRAY", 12, C.bright, Enum.Font.GothamBold)
+infoHead.Position = UDim2.fromOffset(15, 14)
+infoHead.Size = UDim2.new(1, -30, 0, 20)
+
+local infoText = label(info, "Code Sniper controls are visual examples only.\nSwitches do not run game actions or automation.", 11, C.muted)
+infoText.Position = UDim2.fromOffset(15, 40)
+infoText.Size = UDim2.new(1, -30, 0, 42)
+infoText.TextYAlignment = Enum.TextYAlignment.Top
+
+
+-- CODE SNIPER: yalnızca görsel kontrol örnekleri.
+-- Bu anahtarlar oyun verilerine, RemoteEvent'lere veya otomasyonlara bağlı değildir.
+local controlPanel = Instance.new("Frame")
+controlPanel.Name = "CodeSniperVisualControls"
+controlPanel.Position = UDim2.fromOffset(20, 220)
+controlPanel.Size = UDim2.new(1, -40, 0, 132)
+controlPanel.BackgroundTransparency = 1
+controlPanel.Parent = content
+
+local controlLayout = Instance.new("UIGridLayout")
+controlLayout.CellSize = UDim2.new(0.5, -6, 0, 28)
+controlLayout.CellPadding = UDim2.fromOffset(10, 7)
+controlLayout.SortOrder = Enum.SortOrder.LayoutOrder
+controlLayout.Parent = controlPanel
+
+local visualStates = {}
+local controlNames = {
+    "Manuel",
+    "Listen",
+    "Speed",
+    "Words",
+    "Auto Redeem",
+    "Auto Type",
+    "Spam",
+}
+
+local function makeVisualControl(name, order)
+    local button = Instance.new("TextButton")
+    button.Name = name:gsub("%s+", "") .. "VisualButton"
+    button.LayoutOrder = order
+    button.BackgroundColor3 = C.panel2
+    button.BorderSizePixel = 0
+    button.AutoButtonColor = false
+    button.Text = name .. "  •  OFF"
+    button.TextColor3 = C.muted
+    button.TextSize = 11
+    button.Font = Enum.Font.GothamSemibold
+    button.Parent = controlPanel
+    corner(button, 7)
+    stroke(button, C.line, 1)
+
+    visualStates[name] = false
+    button.MouseButton1Click:Connect(function()
+        visualStates[name] = not visualStates[name]
+        local enabled = visualStates[name]
+        button.Text = name .. (enabled and "  •  ON" or "  •  OFF")
+        button.BackgroundColor3 = enabled
+            and Color3.fromRGB(12, 43, 68)
+            or C.panel2
+        button.TextColor3 = enabled and C.bright or C.muted
+    end)
+end
+
+for index, name in ipairs(controlNames) do
+    makeVisualControl(name, index)
+end
+
+local pageNames = {"Code Sniper", "Feed", "Ayarlar", "Test", "Loglar"}
+local pageDescriptions = {
+    "Visual code workspace preview.",
+    "Sample feed and announcement area.",
+    "Appearance and interface preferences.",
+    "Interface preview and sample status.",
+    "Local visual event history.",
+}
+
+local selectedButton
+local function showPage(name, description, button)
+    pageTitle.Text = name
+    pageDesc.Text = description
+    if selectedButton then
+        selectedButton.BackgroundColor3 = C.panel2
+        selectedButton.TextColor3 = C.muted
+        local oldBar = selectedButton:FindFirstChild("ActiveBar")
+        if oldBar then oldBar:Destroy() end
+    end
+    selectedButton = button
+    if button then
+        button.BackgroundColor3 = Color3.fromRGB(12, 43, 68)
+        button.TextColor3 = C.white
+        local bar = Instance.new("Frame")
+        bar.Name = "ActiveBar"
+        bar.Size = UDim2.new(0, 3, 1, -12)
+        bar.Position = UDim2.fromOffset(0, 6)
+        bar.BackgroundColor3 = C.bright
+        bar.BorderSizePixel = 0
+        bar.Parent = button
+        corner(bar, 2)
+    end
+end
+
+for i, name in ipairs(pageNames) do
+    local button = Instance.new("TextButton")
+    button.Name = name:gsub("%s+", "") .. "Button"
+    button.Position = UDim2.fromOffset(10, 43 + (i - 1) * 51)
+    button.Size = UDim2.new(1, -20, 0, 42)
+    button.BackgroundColor3 = C.panel2
+    button.BorderSizePixel = 0
+    button.Text = "   " .. name
+    button.TextColor3 = C.muted
+    button.TextSize = 12
+    button.Font = Enum.Font.GothamSemibold
+    button.TextXAlignment = Enum.TextXAlignment.Left
+    button.AutoButtonColor = false
+    button.Parent = sidebar
+    corner(button, 7)
+
+    button.MouseEnter:Connect(function()
+        if selectedButton ~= button then
+            TweenService:Create(button, TweenInfo.new(0.12), {
+                BackgroundColor3 = Color3.fromRGB(25, 37, 57)
+            }):Play()
+        end
+    end)
+    button.MouseLeave:Connect(function()
+        if selectedButton ~= button then
+            TweenService:Create(button, TweenInfo.new(0.12), {
+                BackgroundColor3 = C.panel2
+            }):Play()
+        end
+    end)
+    button.MouseButton1Click:Connect(function()
+        showPage(name, pageDescriptions[i], button)
+    end)
+
+    if i == 1 then
+        showPage(name, pageDescriptions[i], button)
+    end
+end
+
+local footer = label(main, "LEGENDRAY UI  •  VISUAL TEMPLATE", 8, C.muted, Enum.Font.GothamMedium)
+footer.Position = UDim2.new(0, 18, 1, -18)
+footer.Size = UDim2.fromOffset(260, 12)
+
+close.MouseButton1Click:Connect(function()
+    gui:Destroy()
+end)
+
+-- Sürüklenebilir üst başlık
+local dragging = false
+local dragStart, startPosition
+top.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPosition = main.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+top.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - dragStart
+        main.Position = UDim2.new(
+            startPosition.X.Scale, startPosition.X.Offset + delta.X,
+            startPosition.Y.Scale, startPosition.Y.Offset + delta.Y
+        )
+    end
+end)
