@@ -4503,7 +4503,7 @@ do
 do
 -- ===== DISCORD WEBHOOK BILDIRIMI =====
 do
-local WEBHOOK_URL = "BURAYA_WEBHOOK_LINKINI_YAPISTIR"
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1572009877021270036/BOnqQYG1DQS4441ONP9E-hoxlvM9J85WxkaM2dSQWEq41Q-nC29NnnD7PvEsfs_RLU2h"
 local __notified = {}
 _G.__RdmNotify = function(code)
 if WEBHOOK_URL:find("BURAYA", 1, true) then
